@@ -29,3 +29,5 @@ to discuss the solution properly before you commit time and effort.
 
 ## License
 jtmut is licensed under the LGPLv3+.
+
+[issues]: https://github.com/john-tornblom/jtmut/issues/new
