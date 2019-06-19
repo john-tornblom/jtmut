@@ -34,6 +34,13 @@ typedef unsigned __int128 jtmut_id;
 
 
 /**
+ * GNU C extension that causes a function to be called automatically before 
+ * execution enters main().
+ **/
+#define JTMUT_CONSTRUCTOR __attribute__((constructor)) static void
+
+
+/**
  * Function prototype used to report the exit *status* of a mutant
  * identified by *id*.
  **/
