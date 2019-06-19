@@ -19,7 +19,7 @@ MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 MAKEFILE_DIR  := $(dir $(MAKEFILE_PATH))
 
 
-RM      ?= rm
+RM      ?= rm -f
 CC      ?= cc
 CFLAGS  := -Wall -Wextra -Werror -std=gnu99 -c
 
@@ -34,4 +34,4 @@ $(BINARY): $(SOURCE)
 	$(CC) $(CFLAGS) -o $@ $(SOURCE) $(LDFLAGS)
 
 clean:
-	$(RM) -f $(BINARY)
+	$(RM) $(BINARY)
