@@ -24,11 +24,7 @@ see <http://www.gnu.org/licenses/>.  */
  * Type declaration for mutant identifiers. The value zero (0) is reserved for
  *  the original non-mutated program instance.
  **/
-#ifdef __SIZEOF_INT128__
 typedef unsigned __int128 jtmut_id;
-#else
-typedef unsigned long long jtmut_id;
-#endif
 
 
 /**
