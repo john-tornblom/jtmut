@@ -28,6 +28,12 @@ typedef unsigned __int128 jtmut_id;
 
 
 /**
+ * Convenient macro to express 128bit literals.
+ **/
+#define JTMUT_ID(hi, lo) (((jtmut_id)hi << 64) | lo)
+
+
+/**
  * Function prototype used to report the exit *status* of a mutant
  * identified by *id*.
  **/
