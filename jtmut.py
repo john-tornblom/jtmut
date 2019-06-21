@@ -162,14 +162,13 @@ def main():
     '''
     Parse argv for options and arguments, and start C mutant schemata generator.
     '''
-    parser = optparse.OptionParser(usage="%prog <source.xml>",
+    parser = optparse.OptionParser(usage="%prog [source.xml]",
                                    formatter=optparse.TitledHelpFormatter())
                                    
     parser.set_description(__doc__.strip())
     (opts, args) = parser.parse_args()
-    if len(args) == 0:
-        parser.print_help()
-        sys.exit(1)
+    if not args:
+        args = ['/dev/stdin']
 
     doc = minidom.parse(args[0])
     mutate(doc, 'expr_stmt', 'sdl')
