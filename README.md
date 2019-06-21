@@ -1,6 +1,7 @@
 # Johns tiny schemata mutation testing tool
-jtmut is a tiny schemata mutation testing tool for xml-based srcml format.
-For now though, only C programs are considered.
+jtmut is a tiny schemata mutation testing tool for the xml-based
+[srcml format](https://www.srcml.org/documentation.html). In principle, jtmut
+is language independent. For now though, only C-based programs are considered.
 
 ##  Building the Run-time Library
 ```console
@@ -8,12 +9,12 @@ john@localhost:jtmut$ make
 ```
 
 ## Generating a metaprogram
-jtmut operator on a file format called srcml. For instructions on how to translate
+jtmut operates on a file format called srcml. For instructions on how to translate
 for source code into this file format, see [srcml.org](https://www.srcml.org).
 
-Once you have obtained a srcml file, you can generate a meta-program as follows:
+If you have srcml installed, you can create a metaprogram as follows:
 ```console
-john@localhost:jtmut$ ./jtmut.py source.xml
+john@localhost:jtmut$ srcml source.c | ./jtmut.py | srcml -S > source.meta.c
 ```
 
 ##  Running the Triangle Example
@@ -29,3 +30,6 @@ to discuss the solution properly before you commit time and effort.
 
 ## License
 jtmut is licensed under the LGPLv3+.
+
+
+[issues]: https://github.com/john-tornblom/jtmut/issues/new
