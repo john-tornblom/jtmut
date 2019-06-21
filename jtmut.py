@@ -164,7 +164,11 @@ def main():
     '''
     parser = optparse.OptionParser(usage="%prog [source.xml]",
                                    formatter=optparse.TitledHelpFormatter())
-                                   
+    
+    parser.add_option('-o', dest='output', action='store',
+                      help='Save the metaprogram to PATH (defaults to stdout)',
+                      metavar='PATH', default='/dev/stdout')
+    
     parser.set_description(__doc__.strip())
     (opts, args) = parser.parse_args()
     if not args:
@@ -172,7 +176,12 @@ def main():
 
     doc = minidom.parse(args[0])
     mutate(doc, 'expr_stmt', 'sdl')
-    print(doc.toxml(encoding='utf-8'))
+
+    with open(opts.output, 'w') as f:
+        xml = doc.toxml(encoding='utf-8')
+        f.write(xml)
+
+    
 
     
 if __name__ == '__main__':
