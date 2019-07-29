@@ -31,10 +31,14 @@ from xml.dom import minidom
 
 @contextmanager
 def child(node, tag):
+    '''
+    Create a with-context that yields a new child node with a given *tag*
+    to an existing *node*.
+    '''
     yield node.appendChild(node.ownerDocument.createElement(tag))
 
 
-class Builder(object):
+class MetaProgramBuilder(object):
     doc = None
     next_mid = None
     mutants = None
@@ -45,20 +49,36 @@ class Builder(object):
         self.mutants = set()
         
     def mid(self):
+        '''
+        Obtain a unique mutant id.
+        '''
         mid = self.next_mid
         self.next_mid += 1
         return mid
     
     def element(self, tag):
+        '''
+        Create an element with a given *tag*.
+        '''
         return self.doc.createElement(tag)
         
     def text(self, value):
+        '''
+        Create a text node with a given *value*.
+        '''
         return self.doc.createTextNode(str(value))
 
     def clone(self, node):
+        '''
+        Create a deep clone of a given *node*.
+        '''
         return node.cloneNode(deep=True)
 
     def call(self, fn_name, *arg_exprs):
+        '''
+        Create a call node that invokes a function named *fn_name*, with the
+        optional list of arguments.
+        '''
         expr = self.element('expr')
         with child(expr, 'call') as call:
             with child(call, 'name') as name:
@@ -75,6 +95,9 @@ class Builder(object):
         return expr
 
     def binop(self, lhs, optext, rhs):
+        '''
+        Create a binary operation expression with the operand *optext*.
+        '''
         expr = self.element('expr')
 
         expr.appendChild(lhs)
@@ -85,18 +108,32 @@ class Builder(object):
         return expr
 
     def literal(self, value):
+        '''
+        Create a literal expression node with a given *value*.
+        '''
         expr = self.element('expr')
         with child(expr, 'literal') as literal:
             literal.appendChild(self.text(value))
 
         return expr
-    
+
     def cmp_mid(self, optext, value):
+        '''
+        Create an comparison node that checks the equality between the active 
+        mutant and *value*.
+        '''
         lhs = self.call('jtmut_get_current_id')
         rhs = self.literal(value)
         return self.binop(lhs, optext, rhs)
 
     def mut_sdl(self, node, mid):
+        '''
+        Clone and mutate a given *node* with the statement deletion (SDL) mutation 
+        operator
+        '''
+        mid = self.mid()
+        self.mutants.add(mid)
+        
         if_ = self.element('if')
         if_.appendChild(self.text('if'))
         
@@ -114,6 +151,10 @@ class Builder(object):
         return if_
 
     def register_mutants(self):
+        '''
+        Create a function node that registers all mutant instances when
+        the metaprogram is initialized.
+        '''
         fn = self.element('function')
         
         with child(fn, 'type') as ty:
@@ -140,22 +181,22 @@ class Builder(object):
             
         return fn
     
-    def mutate(self, node, mut_op):
-        ops = dict(sdl=self.mut_sdl)
-        mid = self.mid()
-        new_child = ops[mut_op](node, mid)
+
+def mutate(document, tag, opid):
+    '''
+    Mutate all nodes in a *document* with a given *tag* using a mutation
+    operator identified by *opid*. Supported mutation operator identifiers are:
+       'sdl' - statement deletion.
+    '''
+    builder = Builder(document)
+    ops = dict(sdl=builder.mut_sdl)
+    
+    for node in document.getElementsByTagName(tag):
+        new_child = ops[opid](node)
         node.parentNode.replaceChild(new_child, node)
-        self.mutants.add(mid)
-
-
-def mutate(doc, tag, mut_op):
-    b = Builder(doc)
-    for node in doc.getElementsByTagName(tag):
-        b.mutate(node, mut_op)
         
-    fn = b.register_mutants()
+    fn = builder.register_mutants()
     doc.childNodes[0].appendChild(fn)
-
 
 
 def main():
