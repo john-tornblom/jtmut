@@ -76,7 +76,7 @@ class MetaProgramBuilder(object):
 
     def call(self, fn_name, *arg_exprs):
         '''
-        Create a call node that invokes a function named *fn_name*, with the
+        Create a call node that invokes a function named *fn_name*, with an
         optional list of arguments.
         '''
         expr = self.element('expr')
