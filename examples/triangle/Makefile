@@ -28,12 +28,12 @@ SOURCE := $(MAKEFILE_DIR)/triangle.c \
 
 all: report
 
-main: $(SOURCE)
-	$(CC) $(CFLAGS) -o main $(SOURCE) $(LDFLAGS)
+$(MAKEFILE_DIR)/main: $(SOURCE)
+	$(CC) $(CFLAGS) -o $(MAKEFILE_DIR)/main $(SOURCE) $(LDFLAGS)
 
 clean:
 	rm -f $(MAKEFILE_DIR)/main
 
 
-report: main
+report: $(MAKEFILE_DIR)/main
 	$(MAKEFILE_DIR)/main
