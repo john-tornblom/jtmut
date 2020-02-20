@@ -150,6 +150,23 @@ class MetaProgramBuilder(object):
     
         return if_
 
+    def include(self, doc, filename):
+        include = doc.createElement('cpp:include')
+        include.appendChild(self.text('#'))
+        
+        with child(include, 'cpp:directive') as directive:
+            directive.appendChild(self.text('include'))
+
+        include.appendChild(self.text(' '))
+        with child(include, 'cpp:file') as file_:
+            file_.appendChild(self.text('"%s"\n' % filename))
+
+        root = doc.childNodes[0]
+        first_child = root.childNodes[0]
+        root.insertBefore(include, first_child)
+        
+        return include
+        
     def register_mutants(self):
         '''
         Create a function node that registers all mutant instances when
@@ -189,6 +206,7 @@ def mutate(document, tag, opid):
        'sdl' - statement deletion.
     '''
     builder = MetaProgramBuilder(document)
+    builder.include(document, 'jtmut.h')
     ops = dict(sdl=builder.mut_sdl)
     
     for node in document.getElementsByTagName(tag):
