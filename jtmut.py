@@ -126,7 +126,7 @@ class MetaProgramBuilder(object):
         rhs = self.literal(value)
         return self.binop(lhs, optext, rhs)
 
-    def mut_sdl(self, node, mid):
+    def mut_sdl(self, node):
         '''
         Clone and mutate a given *node* with the statement deletion (SDL) mutation 
         operator
@@ -188,7 +188,7 @@ def mutate(document, tag, opid):
     operator identified by *opid*. Supported mutation operator identifiers are:
        'sdl' - statement deletion.
     '''
-    builder = Builder(document)
+    builder = MetaProgramBuilder(document)
     ops = dict(sdl=builder.mut_sdl)
     
     for node in document.getElementsByTagName(tag):
@@ -196,7 +196,7 @@ def mutate(document, tag, opid):
         node.parentNode.replaceChild(new_child, node)
         
     fn = builder.register_mutants()
-    doc.childNodes[0].appendChild(fn)
+    document.childNodes[0].appendChild(fn)
 
 
 def main():
