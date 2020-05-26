@@ -238,7 +238,7 @@ def main():
 
     with open(opts.output, 'w') as f:
         xml = doc.toxml(encoding='utf-8')
-        f.write(xml)
+        f.write(xml.decode('utf-8'))
 
     
 
